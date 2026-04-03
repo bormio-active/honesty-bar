@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hybrid Camp — Richiesta Prenotazione Camera</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F7F4EE;
+    --white: #FFFFFF;
+    --ink: #1A1814;
+    --ink-muted: #6B6760;
+    --ink-faint: #A8A5A0;
+    --border: #DDD9D2;
+    --border-focus: #1A1814;
+    --accent: #2E4A3E;
+    --accent-light: #E8EFE9;
+    --accent-text: #1B3328;
+    --danger: #8B3A3A;
+    --danger-bg: #FDF2F2;
+    --success: #2E4A3E;
+    --success-bg: #E8EFE9;
+    --radius: 6px;
+    --radius-lg: 10px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 2.5rem 1rem 4rem;
+    line-height: 1.6;
+  }
+
+  .page-wrap {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hotel-tag {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+  }
+
+  .page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-bottom: 0.5rem;
+  }
+
+  .page-header p {
+    font-size: 14px;
+    color: var(--ink-muted);
+    font-weight: 300;
+  }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem 2rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .card-title .step-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--ink);
+    color: var(--white);
+    border-radius: 50%;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .row.three {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  @media (max-width: 520px) {
+    .row, .row.three { grid-template-columns: 1fr; }
+    .card { padding: 1.25rem; }
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+  }
+
+  .field:last-child { margin-bottom: 0; }
+
+  label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  label .req {
+    color: var(--danger);
+    margin-left: 2px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ink);
+    background: var(--white);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 2px rgba(26,24,20,0.08);
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: var(--ink-faint);
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B6760' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    padding-right: 2.2rem;
+    cursor: pointer;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .room-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.65rem;
+    margin-top: 0.35rem;
+  }
+
+  .room-opt {
+    position: relative;
+  }
+
+  .room-opt input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .room-opt label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  .room-opt label .room-name {
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--ink);
+  }
+
+  .room-opt label .room-sub {
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-weight: 300;
+  }
+
+  .room-opt input:checked + label {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .room-opt label:hover {
+    border-color: var(--ink-muted);
+  }
+
+  .companion-section {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px dashed var(--border);
+  }
+
+  .companion-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .radio-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    padding: 0.6rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .radio-row:hover { border-color: var(--ink-muted); }
+
+  .radio-row.selected {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .radio-row input[type="radio"] {
+    width: auto;
+    margin-top: 3px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .radio-row .radio-label {
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 400;
+    line-height: 1.45;
+  }
+
+  .radio-row .radio-label small {
+    display: block;
+    font-size: 11px;
+    color: var(--ink-muted);
+    margin-top: 1px;
+  }
+
+  .companion-fields {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.1rem;
+    margin-top: 0.75rem;
+    display: none;
+  }
+
+  .companion-fields.visible { display: block; }
+
+  .companion-fields .fields-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.9rem;
+  }
+
+  .note-box {
+    background: var(--accent-light);
+    border: 1px solid #C5D9C7;
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 12.5px;
+    color: var(--accent-text);
+    line-height: 1.5;
+  }
+
+  .submit-btn {
+    display: block;
+    width: 100%;
+    padding: 0.9rem 2rem;
+    background: var(--ink);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    margin-top: 1.5rem;
+  }
+
+  .submit-btn:hover { background: #333; }
+  .submit-btn:active { transform: scale(0.99); }
+  .submit-btn:disabled { background: var(--ink-faint); cursor: not-allowed; }
+
+  .footer-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-top: 1.5rem;
+    line-height: 1.6;
+  }
+
+  .success-msg {
+    display: none;
+    background: var(--success-bg);
+    border: 1px solid #C5D9C7;
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .success-msg.visible { display: block; }
+
+  .success-msg h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--accent-text);
+    margin-bottom: 0.5rem;
+  }
+
+  .success-msg p {
+    font-size: 13.5px;
+    color: var(--accent);
+  }
+
+  .required-note {
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-bottom: 1.5rem;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <header class="page-header">
+    <img src="funivia-logo-transparent.png" alt="Funivia Bormio Active Hotel" style="height: 110px; width: auto; margin-bottom: 1.5rem;">
+    <h1>Richiesta prenotazione<br>Hybrid Camp</h1>
+    <p>Compila il form per ogni cliente che conferma la partecipazione.</p>
+  </header>
+
+  <p class="required-note">I campi con <span style="color:#8B3A3A">*</span> sono obbligatori</p>
+
+  <div id="success-msg" class="success-msg">
+    <h2>Richiesta inviata</h2>
+    <p>Il team booking ha ricevuto la scheda e verrà contattato il cliente a breve.</p>
+  </div>
+
+  <!-- ⚠️ ISTRUZIONI: sostituisci YOUR_FORMSPREE_ID con il codice ottenuto su formspree.io -->
+  <form id="booking-form" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" novalidate>
+
+    <!-- Campo nascosto: destinatari in CC -->
+    <input type="hidden" name="_cc" value="enrico@hotelfunivia.it,elisa@hotelfunivia.it">
+    <input type="hidden" name="_subject" value="[Hybrid Camp] Nuova richiesta prenotazione">
+    <input type="hidden" name="_next" value="">
+    <input type="hidden" name="_template" value="table">
+
+    <!-- SEZIONE 1: Dati cliente -->
+    <div class="card">
+      <div class="card-title">
+        <span class="step-badge">1</span>
+        Dati cliente
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="cli-nome">Nome <span class="req">*</span></label>
+          <input type="text" id="cli-nome" name="Cliente — Nome" required placeholder="es. Anna">
+        </div>
+        <div class="field">
+          <label for="cli-cognome">Cognome <span class="req">*</span></label>
+          <input type="text" id="cli-cognome" name="Cliente — Cognome" required placeholder="es. Bianchi">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="cli-telefono">Telefono <span class="req">*</span></label>
+          <input type="tel" id="cli-telefono" name="Cliente — Telefono" required placeholder="+39 333 000 0000">
+        </div>
+        <div class="field">
+          <label for="cli-email">Email <span class="req">*</span></label>
+          <input type="email" id="cli-email" name="Cliente — Email" required placeholder="esempio@mail.it">
+        </div>
+      </div>
+    </div>
+
+    <!-- SEZIONE 2: Camera -->
+    <div class="card">
+      <div class="card-title">
+        <span class="step-badge">2</span>
+        Tipo di camera richiesta
+      </div>
+      <div class="field">
+        <label>Seleziona la sistemazione <span class="req">*</span></label>
+        <div class="room-options">
+          <div class="room-opt">
+            <input type="radio" id="room-classic" name="Camera — Tipo" value="Classic" required>
+            <label for="room-classic">
+              <span class="room-name">Classic</span>
+              <span class="room-sub">380€ / persona</span>
+            </label>
+          </div>
+          <div class="room-opt">
+            <input type="radio" id="room-superior" name="Camera — Tipo" value="Superior">
+            <label for="room-superior">
+              <span class="room-name">Superior</span>
+              <span class="room-sub">450€ / persona</span>
+            </label>
+          </div>
+          <div class="room-opt">
+            <input type="radio" id="room-junior" name="Camera — Tipo" value="Junior Suite">
+            <label for="room-junior">
+              <span class="room-name">Junior Suite</span>
+              <span class="room-sub">555€ / persona</span>
+            </label>
+          </div>
+          <div class="room-opt">
+            <input type="radio" id="room-suite" name="Camera — Tipo" value="Suite">
+            <label for="room-suite">
+              <span class="room-name">Suite</span>
+              <span class="room-sub">620€ / persona</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEZIONE 3: Compagno di camera -->
+    <div class="card" id="companion-card">
+      <div class="card-title">
+        <span class="step-badge">3</span>
+        Situazione compagno di camera
+      </div>
+
+      <div class="companion-toggle">
+        <label class="radio-row" id="row-has-companion">
+          <input type="radio" name="Compagno — Stato" value="Nominativo già indicato" id="comp-yes">
+          <span class="radio-label">
+            Ha già un compagno di camera
+            <small>Inserirà il nominativo nella sezione che si apre</small>
+          </span>
+        </label>
+        <label class="radio-row" id="row-waiting">
+          <input type="radio" name="Compagno — Stato" value="In attesa di compagno" id="comp-wait">
+          <span class="radio-label">
+            In attesa di compagno
+            <small>Non ha ancora indicato nessuno</small>
+          </span>
+        </label>
+        <label class="radio-row" id="row-match">
+          <input type="radio" name="Compagno — Stato" value="Da abbinare a nominativo già segnalato" id="comp-match">
+          <span class="radio-label">
+            Da abbinare a un nominativo già segnalato
+            <small>Indicare il nome nella sezione che si apre</small>
+          </span>
+        </label>
+      </div>
+
+      <!-- Campi compagno -->
+      <div class="companion-fields" id="companion-fields">
+        <p class="fields-title">Dati compagno di camera</p>
+        <div class="row">
+          <div class="field">
+            <label for="comp-nome">Nome <span class="req">*</span></label>
+            <input type="text" id="comp-nome" name="Compagno — Nome" placeholder="es. Luca">
+          </div>
+          <div class="field">
+            <label for="comp-cognome">Cognome <span class="req">*</span></label>
+            <input type="text" id="comp-cognome" name="Compagno — Cognome" placeholder="es. Verdi">
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="comp-telefono">Telefono</label>
+            <input type="tel" id="comp-telefono" name="Compagno — Telefono" placeholder="+39 333 000 0000">
+          </div>
+          <div class="field">
+            <label for="comp-email">Email</label>
+            <input type="email" id="comp-email" name="Compagno — Email" placeholder="esempio@mail.it">
+          </div>
+        </div>
+      </div>
+
+      <!-- Campo per "abbina a già segnalato" -->
+      <div class="companion-fields" id="match-fields">
+        <p class="fields-title">Nominativo già segnalato</p>
+        <div class="field">
+          <label for="match-nome">Nome e cognome del nominativo <span class="req">*</span></label>
+          <input type="text" id="match-nome" name="Compagno — Da abbinare a" placeholder="es. Mario Rossi">
+        </div>
+      </div>
+    </div>
+
+    <!-- SEZIONE 4: Note -->
+    <div class="card">
+      <div class="card-title">
+        <span class="step-badge">4</span>
+        Note aggiuntive
+      </div>
+      <div class="field">
+        <label for="note">Note per il booking (facoltativo)</label>
+        <textarea id="note" name="Note" placeholder="Eventuali esigenze particolari, richieste speciali, ecc."></textarea>
+      </div>
+    </div>
+
+    <div class="note-box">
+      La scheda verrà inviata a <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6801060e072800071c0d040e1d06011e010946011c">[email&#160;protected]</a></strong> con copia a Enrico ed Elisa. Il booking contatterà il cliente per conferma.
+    </div>
+
+    <button type="submit" class="submit-btn" id="submit-btn">Invia richiesta di prenotazione</button>
+
+    <p class="footer-note">
+      Hotel Funivia · Hybrid Camp Booking<br>
+      Per assistenza: <a href="/cdn-cgi/l/email-protection#533a3d353c133b3c27363f35263d3a253a327d3a27" style="color:inherit"><span class="__cf_email__" data-cfemail="0e676068614e66617a6b62687b606778676f20677a">[email&#160;protected]</span></a>
+    </p>
+  </form>
+
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  const form = document.getElementById('booking-form');
+  const successMsg = document.getElementById('success-msg');
+  const submitBtn = document.getElementById('submit-btn');
+
+  const compYes = document.getElementById('comp-yes');
+  const compWait = document.getElementById('comp-wait');
+  const compMatch = document.getElementById('comp-match');
+  const companionFields = document.getElementById('companion-fields');
+  const matchFields = document.getElementById('match-fields');
+
+  const radioRows = document.querySelectorAll('.radio-row');
+
+  function updateRadioStyles() {
+    radioRows.forEach(row => {
+      const inp = row.querySelector('input[type="radio"]');
+      row.classList.toggle('selected', inp.checked);
+    });
+  }
+
+  function handleCompanionToggle() {
+    updateRadioStyles();
+    companionFields.classList.remove('visible');
+    matchFields.classList.remove('visible');
+
+    document.getElementById('comp-nome').removeAttribute('required');
+    document.getElementById('comp-cognome').removeAttribute('required');
+    document.getElementById('match-nome').removeAttribute('required');
+
+    if (compYes.checked) {
+      companionFields.classList.add('visible');
+      document.getElementById('comp-nome').setAttribute('required', '');
+      document.getElementById('comp-cognome').setAttribute('required', '');
+    } else if (compMatch.checked) {
+      matchFields.classList.add('visible');
+      document.getElementById('match-nome').setAttribute('required', '');
+    }
+  }
+
+  [compYes, compWait, compMatch].forEach(r => r.addEventListener('change', handleCompanionToggle));
+
+  const roomRadios = document.querySelectorAll('.room-opt input[type="radio"]');
+  roomRadios.forEach(r => r.addEventListener('change', () => {
+    // tutte le camere sono condivise, la sezione compagno è sempre visibile
+  }));
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const roomVal = document.querySelector('input[name="Camera — Tipo"]:checked');
+    if (!roomVal) { alert('Seleziona il tipo di camera.'); return; }
+
+    const roomSingola = roomVal.value === 'Singola (uso singolo)';
+    if (!roomSingola) {
+      const compState = document.querySelector('input[name="Compagno — Stato"]:checked');
+      if (!compState) { alert('Indica la situazione del compagno di camera.'); return; }
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Invio in corso…';
+
+    const data = new FormData(form);
+
+    try {
+      const resp = await fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (resp.ok) {
+        
